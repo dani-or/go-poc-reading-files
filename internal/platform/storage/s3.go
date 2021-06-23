@@ -32,8 +32,8 @@ func NewS3Repository() *S3Repository {
 }
 
 //requiere la variable de entorno 
-//export NEQUI_BUCKET_NAME="nequi-s3-select-tmp"
-//export NEQUI_FILE_KEY="resource/FINACLE_NEQUICARTERA_20200508_VENCIDOS.csv"
+//export NEQUI_BUCKET_NAME=nequi-s3-select-tmp
+//export NEQUI_FILE_KEY=resource/FINACLE_NEQUICARTERA_20200508_VENCIDOS.csv
 func (r *S3Repository) GetTransactions() (transaction.Transaction, error) {
 	transaction, error := transaction.NewTransaction(500,1, 2, 3, "debentura" )
 	file, err := os.Create("myname")
