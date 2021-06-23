@@ -31,51 +31,43 @@ func NewS3Repository() *S3Repository {
 	}
 }
 
-//requiere la variable de entorno export NEQUI_CREDITS_TABLE_NAME=credit-customer-product-qa
+//requiere la variable de entorno 
+//export NEQUI_BUCKET_NAME="nequi-s3-select-tmp"
+//export NEQUI_FILE_KEY="resource/FINACLE_NEQUICARTERA_20200508_VENCIDOS.csv"
 func (r *S3Repository) GetTransactions() (transaction.Transaction, error) {
 	transaction, error := transaction.NewTransaction(500,1, 2, 3, "debentura" )
-	
 	file, err := os.Create("myname")
     if err != nil {
         fmt.Println("Unable to open file %q, %v", "myname", err)
     }
-
     defer file.Close()
-	
 	numBytes, err := r.d.Download(file,
         &s3.GetObjectInput{
-            Bucket: aws.String("nequi-s3-select-tmp"),
-            Key:    aws.String("resource/FINACLE_NEQUICARTERA_20200508_VENCIDOS.csv"),
+
+            Bucket: aws.String(os.Getenv("NEQUI_BUCKET_NAME")),
+            Key:    aws.String(os.Getenv("NEQUI_FILE_KEY")),
         })
     if err != nil {
         fmt.Println("pailas", err)
     }
-
 	fmt.Println("Downloaded", file.Name(), numBytes, "bytes")
-	
 	file2, err := os.Open("myname")
- 
 	if err != nil {
 		log.Fatalf("failed opening file: %s", err)
 	}
- 
 	scanner := bufio.NewScanner(file2)
 	scanner.Split(bufio.ScanLines)
 	var txtlines []string
- 
 	for scanner.Scan() {
 		txtlines = append(txtlines, scanner.Text())
 	}
- 
 	file.Close()
 	var numeros1 []LineRecord;
-
 	for _, eachline := range txtlines {
 		fmt.Println(eachline)		
 		fmt.Println("--------------------------------")
 	}
 	fmt.Println(numeros1);
-
 	e := os.Remove("myname")
     if e != nil {
         log.Fatal(e)
