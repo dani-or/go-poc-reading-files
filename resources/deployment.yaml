@@ -1,0 +1,28 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-poc-reading-files-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      ambiente: pruebas
+      lenguaje: node
+      project: go-poc-reading-files
+  template:
+    metadata:
+      labels:
+        app: backend
+        ambiente: pruebas
+        lenguaje: node
+        project: go-poc-reading-files
+    spec:
+      serviceAccountName: go-poc-reading-files-service-account-name1
+      containers:
+        - name: go-poc-reading-files
+          image: 851560454673.dkr.ecr.us-east-1.amazonaws.com/go-poc-reading-files:latest
+          ports:
+            - containerPort: 8080
